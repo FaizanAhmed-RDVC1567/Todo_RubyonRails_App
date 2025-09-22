@@ -24,7 +24,9 @@ jobs:
 
       - name: Scan for common Rails security vulnerabilities using static analysis (Linux)
         if: runner.os == 'Linux'
-        run: sudo bin/brakeman --no-pager
+        run: |
+          chmod +x bin/*
+          bin/brakeman --no-pager
         
         # For windows, explicitly mentioning 'ruby' is necessary
       - name: Scan for common Rails security vulnerabilities using static analysis (Windows)
@@ -49,7 +51,9 @@ jobs:
 
       - name: Scan for security vulnerabilities in JavaScript dependencies (Linux)
         if: runner.os == 'Linux'
-        run: sudo bin/importmap audit
+        run: |
+          chmod +x bin/*
+          bin/importmap audit
 
       # Again as before, mentioning 'ruby' explicitly is important on Windows.
       - name: Scan for security vulnerabilities in JavaScript dependencies (Windows)
@@ -67,10 +71,14 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-
+      
+      # The marking of files inside the bin folder as executable is very important in Linux because of Windows specific settings when
+      # generating some types of files.
       - name: Lint code for consistent style (Linux)
         if: runner.os == 'Linux'
-        run: sudo bin/rubocop -f github
+        run: |
+          chmod +x bin/*
+          bin/rubocop -f github
       
       - name: Lint code for consistent style (Windows)
         if: runner.os == 'Windows'
@@ -121,7 +129,10 @@ jobs:
         env:
           RAILS_ENV: test
           # REDIS_URL: redis://localhost:6379/0
-        run: sudo bin/rails db:test:prepare test test:system
+          # The chmod +x bit is needed here because the files were generated on a Windows machine which doesn't set an executable bit.
+        run: |
+          chmod +x bin/*
+          bin/rails db:test:prepare test test:system
 
       # Same with this step, need to explicitly mention ruby rather than relying on Linux's shebang syntax which will not work.
       - name: Run tests (Windows)
