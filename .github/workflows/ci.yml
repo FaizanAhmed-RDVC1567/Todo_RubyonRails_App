@@ -108,7 +108,12 @@ jobs:
           iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
           choco feature enable -n allowGlobalConfirmation
           choco install msys2 googlechrome -y
-          & 'C:\tools\msys2\usr\bin\bash.exe' -lc 'pacman -Syu --noconfirm base-devel git pkg-config libyaml'
+          # Find msys2 bash or use Git bash if available
+          $bashPath = "$env:ChocolateyInstall\lib\msys2\tools\msys64\usr\bin\bash.exe"
+          if (!(Test-Path $bashPath)) {
+            $bashPath = "C:\Program Files\Git\bin\bash.exe"
+          }
+          & $bashPath -lc 'pacman -Syu --noconfirm base-devel git pkg-config libyaml'
       # Comments for the above steps:
       # 1) Install Chocolatey if not present
       # 2) Enable auto-confirmation
