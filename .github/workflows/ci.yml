@@ -110,7 +110,7 @@ jobs:
           choco feature enable -n allowGlobalConfirmation
           choco install msys2 googlechrome -y
           # Using MSYS2 bash directlyas it has access to pacman utility
-          & "C:\ProgramData\chocolatey\lib\msys2\tools\msys64\usr\bin\bash.exe" -lc 'pacman -Syu --noconfirm base-devel git pkg-config libyaml'
+          & "C:\tools\msys64\usr\bin\bash.exe" -lc 'pacman -Syu --noconfirm base-devel git pkg-config libyaml'
       # Comments for the above steps:
       # 1) Install Chocolatey if not present
       # 2) Enable auto-confirmation
